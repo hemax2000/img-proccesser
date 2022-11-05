@@ -23,7 +23,8 @@ will show the picture
 -added services file under src for logic and moved the img proccessing functionality there
 -adjusted package.json according to the reviewer comments
 -fixed the problem with the image endpoint and added extra input validation
-image.png
+![image](https://user-images.githubusercontent.com/95032871/200105777-b1c76c2d-9d2b-4170-ac35-02db6912d0d1.png)
+
 
 -added test for imgProccess function
 -added appropiate typing for parameters and returns
