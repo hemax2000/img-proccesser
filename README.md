@@ -19,8 +19,8 @@ will show misiing inputs
 -http://localhost:3000/api/image?filename=test.jpg&width=300&height=150
 will show the picture
 
--------------------------------------------
 # Changes
+-------------------------------------------
 
 -added services file under src for logic and moved the img proccessing functionality there
 
