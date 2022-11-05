@@ -11,6 +11,6 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true
   },
-  "include": ["./src", "index.ts","./types/types.d.ts"],
-  "exclude": ["node_modules", "spec", "build"]
+  "include": ["src/**/*.ts", "index.ts","./types/types.d.ts","dist/**/*",".eslintrc.js"],
+  "exclude": ["node_modules", "spec", "build",]
 }

@@ -12,8 +12,10 @@ module.exports = {
   parserOptions: {
     ecmaVersion: "latest",
     sourceType: "module",
+    project: "./tsconfig.json",
   },
   plugins: ["@typescript-eslint", "prettier"],
+  ignorePatterns: ["**.js", "**.json"],
   rules: {
     semi: ["error", "always"],
     quotes: ["error", "double"],
@@ -23,7 +25,6 @@ module.exports = {
         endOfLine: "auto",
       },
     ], // Means error
-    "no-console": 1, // Means warning
     "no-var": "error",
     "prefer-const": "error",
   },

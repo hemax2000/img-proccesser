@@ -1,68 +1,57 @@
 import express from "express";
-import sharp from "sharp";
 import { promises as fs } from "fs";
 import path from "path";
+import imgProccesser from "../../services/imgProccesser";
 import cache from "node-cache";
 
-const imgCache = new cache();
+export const imgCache = new cache();
 
-const imageRouter = express.Router();
+export const imageRouter = express.Router();
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 const check = (req: express.Request, res: express.Response, next: Function) => {
   if (
-    typeof req.query.image === "undefined" &&
-    typeof req.query.image === "undefined" &&
-    typeof req.query.image === "undefined"
+    typeof req.query.filename === "undefined" &&
+    typeof req.query.width === "undefined" &&
+    typeof req.query.height === "undefined"
   ) {
     res.send("missing inputs");
   } else {
-    next();
-  }
-};
-imageRouter.route("/").get(check, async (req, res) => {
-  if (imgCache.getStats()["keys"] > 0) {
-    if (
-      imgCache.get("name") === req.query.image &&
-      imgCache.get("width") === req.query.width &&
-      imgCache.get("height") === req.query.height
+    if (!((req.query.filename as string).split(".").length > 1)) {
+      res.send("please provide file format in filename");
+    } else if (
+      !((req.query.width as unknown as number) > 0) ||
+      !((req.query.height as unknown as number) > 0)
     ) {
-      return res.sendFile(imgCache.get("imgPath") as string);
+      res.send("height nad width must be numbers and over 0");
     } else {
-      imgCache.flushAll();
+      next();
     }
   }
+};
 
-  const name = req.query.image as string;
-  const height = parseInt(req.query.height as string);
-  const width = parseInt(req.query.width as string);
-
-  const originalPath = path.join(__dirname, `../../../assets/images/${name}`);
-  try {
-    const resizedImg = sharp(originalPath).resize(width, height);
-
-    await fs.stat(originalPath);
-
-    const tmpName = name.split(".");
-    const newName = tmpName[0] + "_thumb." + tmpName[1];
-    const newPath = path.join(__dirname, `../../../assets/thumb/${newName}`);
-
-    const pic = await fs.open(newPath, "a+");
-    await pic.write(newPath);
-    pic.close();
-
-    await resizedImg.toFile(newPath);
-
-    imgCache.mset([
-      { key: "imgPath", val: newPath, ttl: 20 },
-      { key: "name", val: req.query.image, ttl: 20 },
-      { key: "width", val: req.query.width, ttl: 20 },
-      { key: "height", val: req.query.height, ttl: 20 },
-    ]);
-    res.sendFile(newPath);
-  } catch {
-    res.send("file does not exist");
-  }
-});
-
-export default imageRouter;
+imageRouter
+  .route("/")
+  .get(check, async (req: express.Request, res: express.Response) => {
+    if (imgCache.getStats()["keys"] > 0) {
+      if (
+        imgCache.get("name") === req.query.filename &&
+        imgCache.get("width") === req.query.width &&
+        imgCache.get("height") === req.query.height
+      ) {
+        return res.sendFile(imgCache.get("imgPath") as string);
+      } else {
+        imgCache.flushAll();
+      }
+    }
+    try {
+      const name = req.query.filename as string;
+      const height = parseInt(req.query.height as string);
+      const width = parseInt(req.query.width as string);
+      await fs.stat(path.join(__dirname, `../../../assets/images/${name}`));
+      const imgPath = await imgProccesser(name, height, width);
+      res.sendFile(imgPath);
+    } catch (err) {
+      res.send(err);
+    }
+  });
