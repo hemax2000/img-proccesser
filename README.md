@@ -7,6 +7,7 @@ to build the project: npm run build
 to install dependencies: npm install
 
 to start the project: npm start
+
 -------------------------------------------
 
 links in for the project:
