@@ -15,7 +15,6 @@ const imgProccesser = async (
   const newName = tmpName[0] + width + height + "." + tmpName[1];
   const newPath = path.join(__dirname, `../../assets/thumb/${newName}`);
   const pic = await fs.open(newPath, "a+");
-
   await pic.write(newPath);
   pic.close();
 

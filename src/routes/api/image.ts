@@ -71,6 +71,6 @@ imageRouter
       const imgPath = await imgProccesser(name, width, height);
       res.sendFile(imgPath);
     } catch (err) {
-      res.send(err);
+      res.send("file does not exist");
     }
   });
