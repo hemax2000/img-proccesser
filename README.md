@@ -36,3 +36,9 @@ will show the picture
 -added appropiate typing for parameters and returns
 
 -add .eslintigonre to igonre *dist* file
+
+changes after 2nd review
+----------------------------------------------------------
+-made new caching logic that will check if file with the provided parameters have been already cached and will retrive it if not will proccess the img and save in cache
+-changed the proccessed image name to "nameWidthHeight.format"
+-added failsafe if the user deleted the proccessed image manually
