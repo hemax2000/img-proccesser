@@ -16,7 +16,7 @@ will show 'hello world;
 -http://localhost:3000/api/image
 will show misiing inputs
 
--http://localhost:3000/api/image?image=test.jpg&width=300&height=150
+-http://localhost:3000/api/image?filename=test.jpg&width=300&height=150
 will show the picture
 
 -------------------------------------------
