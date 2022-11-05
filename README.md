@@ -18,3 +18,13 @@ will show misiing inputs
 will show the picture
 
 -------------------------------------------
+# Changes
+
+-added services file under src for logic and moved the img proccessing functionality there
+-adjusted package.json according to the reviewer comments
+-fixed the problem with the image endpoint and added extra input validation
+image.png
+
+-added test for imgProccess function
+-added appropiate typing for parameters and returns
+-add .eslintigonre to igonre *dist* file
