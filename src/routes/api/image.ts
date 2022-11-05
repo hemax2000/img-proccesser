@@ -34,22 +34,41 @@ imageRouter
   .route("/")
   .get(check, async (req: express.Request, res: express.Response) => {
     if (imgCache.getStats()["keys"] > 0) {
-      if (
-        imgCache.get("name") === req.query.filename &&
-        imgCache.get("width") === req.query.width &&
-        imgCache.get("height") === req.query.height
-      ) {
-        return res.sendFile(imgCache.get("imgPath") as string);
-      } else {
-        imgCache.flushAll();
-      }
+      const proccessedImgs: string[] = imgCache.keys();
+      const tmpName = (req.query.filename as string).split(".");
+      const imgName =
+        tmpName[0] + req.query.width + req.query.height + "." + tmpName[1];
+      proccessedImgs.forEach(async (x) => {
+        if (imgCache.get(x) === imgName) {
+          try {
+            await fs.stat(
+              path.join(
+                __dirname,
+                `../../../assets/thumb/${imgCache.get("imgName")}`
+              )
+            );
+
+            res.sendFile(
+              path.join(
+                __dirname,
+                `../../../assets/thumb/${imgCache.get("imgName")}`
+              ) as string
+            );
+            return;
+          } catch {
+            console.log("deleted...");
+            imgCache.del(x);
+          }
+        }
+      });
     }
+
     try {
       const name = req.query.filename as string;
       const height = parseInt(req.query.height as string);
       const width = parseInt(req.query.width as string);
       await fs.stat(path.join(__dirname, `../../../assets/images/${name}`));
-      const imgPath = await imgProccesser(name, height, width);
+      const imgPath = await imgProccesser(name, width, height);
       res.sendFile(imgPath);
     } catch (err) {
       res.send(err);

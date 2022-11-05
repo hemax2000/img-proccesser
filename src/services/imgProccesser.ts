@@ -12,7 +12,7 @@ const imgProccesser = async (
 
   const resizedImg = sharp(originalPath).resize(width, height);
   const tmpName = name.split(".");
-  const newName = tmpName[0] + "_thumb." + tmpName[1];
+  const newName = tmpName[0] + width + height + "." + tmpName[1];
   const newPath = path.join(__dirname, `../../assets/thumb/${newName}`);
   const pic = await fs.open(newPath, "a+");
 
@@ -20,13 +20,7 @@ const imgProccesser = async (
   pic.close();
 
   await resizedImg.toFile(newPath);
-
-  imgCache.mset([
-    { key: "imgPath", val: newPath, ttl: 20 },
-    { key: "name", val: name, ttl: 20 },
-    { key: "width", val: width as unknown as string, ttl: 20 },
-    { key: "height", val: height as unknown as string, ttl: 20 },
-  ]);
+  imgCache.set("imgName", newName);
   return newPath;
 };
 
